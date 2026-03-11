@@ -38,7 +38,7 @@ Estas estructuras permiten simular de forma eficiente el flujo de información d
 El sistema sigue una organización basada en una estructura similar al patrón **MVC (Model - View - Controller)**.
 
 Estructura del proyecto:
-
+```
 src
 ├── Controller
 │   ├── ClienteController
@@ -46,27 +46,27 @@ src
 │   ├── PedidoController
 │   ├── MenuController
 │   └── HistorialController
-
+│
 ├── Repository
 │   ├── ClienteRepository
 │   ├── MesaRepository
 │   ├── PedidoRepository
 │   ├── PlatoRepository
 │   └── HistorialAccionRepository
-
+│
 ├── Estructuras
 │   ├── Arbol
 │   ├── Cola
 │   ├── Lista
 │   ├── Pila
 │   └── Arreglo
-
+│
 ├── Patrones
 │   └── Singleton
-
+│
 └── resources
-└── templates (interfaz HTML)
-
+    └── templates
+```
 ---
 
 ## Funcionalidades del sistema
