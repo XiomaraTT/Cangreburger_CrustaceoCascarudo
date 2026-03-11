@@ -99,7 +99,7 @@ Además, busca reforzar el uso de **arquitecturas organizadas y buenas práctica
 
 ## Autora
 
-Xiomara Torres Tupia
+Xiomara Torres Tupia - 
 Estudiante de Ingeniería de Software
 
 Proyecto académico enfocado en la aplicación práctica de estructuras de datos y diseño de software.
