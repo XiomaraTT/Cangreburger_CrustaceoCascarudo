@@ -88,6 +88,15 @@ Además, busca reforzar el uso de **arquitecturas organizadas y buenas práctica
 
 ---
 
+## Cómo ejecutar el proyecto
+
+1. Clonar el repositorio: git clone https://github.com/XiomaraTT/Cangreburger_CrustaceoCascarudo.git
+2. Abrir el proyecto en IntelliJ IDEA.
+3. Ejecutar la clase principal: Main.java
+4. Abrir el navegador en: http://localhost:8080
+
+---
+
 ## Autora
 
 Xiomara Torres Tupia
