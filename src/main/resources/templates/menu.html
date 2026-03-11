@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menú - Crustáceo Cascarudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #b5e2f5 50%, #E0F4FF 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 30px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.3);
+            border: 3px solid #5DADE2;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        .subtitle {
+            color: #1e5799;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 20px;
+            border: 2px solid #5DADE2;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1300px;
+            margin: auto;
+            flex-wrap: wrap;
+        }
+        .lista-platos {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(30, 87, 153, 0.15);
+            flex: 2;
+            min-width: 500px;
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .lista-platos::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        .form-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(30, 87, 153, 0.15);
+            flex: 1;
+            min-width: 300px;
+            max-width: 350px;
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            border-bottom: 3px solid #5DADE2;
+            padding-bottom: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        .categoria-section {
+            margin-bottom: 25px;
+        }
+        .categoria-titulo {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            display: inline-block;
+            margin-bottom: 15px;
+            font-weight: bold;
+            font-size: 1.1em;
+            border: 2px solid #5DADE2;
+        }
+        .platos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 15px;
+        }
+        .plato-card {
+            background: linear-gradient(135deg, #fff 0%, #F0F8FF 100%);
+            border: 2px solid #5DADE2;
+            border-radius: 15px;
+            padding: 18px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .plato-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(30, 87, 153, 0.25);
+        }
+        .plato-nombre {
+            font-weight: 700;
+            color: #1e5799;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .plato-categoria {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        .plato-precio {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1e5799;
+            font-size: 0.95em;
+        }
+        input[type="text"], input[type="number"], select {
+            padding: 14px 15px;
+            margin-bottom: 18px;
+            border: 2px solid #AED6F1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #FFFFFF;
+            color: #1a1a2e;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #3498DB;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+        button {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            border: 2px solid #5DADE2;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.4);
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+        .btn-volver {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            border: 2px solid #5DADE2;
+        }
+        .btn-volver:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 87, 153, 0.3);
+        }
+        .btn-home {
+            background: white;
+            color: #1e5799;
+            border: 2px solid #1e5799;
+        }
+        .btn-home:hover {
+            background: #E8F4FD;
+            transform: translateY(-3px);
+        }
+        .info-orden {
+            text-align: right;
+            color: #666;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+        .wave-decoration {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e5799' fill-opacity='0.1' d='M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,218.7C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <div class="logo-badge">
+        <h1>Menú del Crustáceo</h1>
+    </div>
+    <p class="subtitle">¡Los mejores platillos de Fondo de Bikini!</p>
+</div>
+
+<div class="wave-decoration"></div>
+
+<div class="main-container">
+    <div class="lista-platos">
+        <h2>Platos Disponibles</h2>
+        <p class="info-orden">Ordenados alfabéticamente (A-Z)</p>
+
+        <div class="categoria-section">
+            <span class="categoria-titulo">Hamburguesas</span>
+            <div class="platos-grid">
+                <div th:each="plato : ${platos}" th:if="${plato.categoria == 'Hamburguesas'}" class="plato-card">
+                    <div class="plato-nombre" th:text="${plato.nombre}"></div>
+                    <div class="plato-categoria" th:text="${plato.categoria}"></div>
+                    <span class="plato-precio" th:text="'S/ ' + ${plato.precio}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="categoria-section">
+            <span class="categoria-titulo">Bebidas</span>
+            <div class="platos-grid">
+                <div th:each="plato : ${platos}" th:if="${plato.categoria == 'Bebidas'}" class="plato-card">
+                    <div class="plato-nombre" th:text="${plato.nombre}"></div>
+                    <div class="plato-categoria" th:text="${plato.categoria}"></div>
+                    <span class="plato-precio" th:text="'S/ ' + ${plato.precio}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="categoria-section">
+            <span class="categoria-titulo">Acompañamientos</span>
+            <div class="platos-grid">
+                <div th:each="plato : ${platos}" th:if="${plato.categoria == 'Acompañamientos'}" class="plato-card">
+                    <div class="plato-nombre" th:text="${plato.nombre}"></div>
+                    <div class="plato-categoria" th:text="${plato.categoria}"></div>
+                    <span class="plato-precio" th:text="'S/ ' + ${plato.precio}"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Agregar Plato</h2>
+        <form action="/menu/agregar" method="post">
+            <label for="nombre">Nombre del plato:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Ej: Cangreburger Supreme" required>
+
+            <label for="precio">Precio (S/):</label>
+            <input type="number" id="precio" step="0.01" name="precio" placeholder="Ej: 15.00" required>
+
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria" required>
+                <option value="">-- Seleccione --</option>
+                <option value="Hamburguesas">Hamburguesas</option>
+                <option value="Bebidas">Bebidas</option>
+                <option value="Acompañamientos">Acompañamientos</option>
+            </select>
+
+            <button type="submit">Agregar al Menú</button>
+        </form>
+    </div>
+</div>
+
+<div class="nav-buttons">
+    <a href="/" class="btn-nav btn-home">Inicio</a>
+    <a href="/pedidos" class="btn-nav btn-volver">Ir a Pedidos</a>
+</div>
+
+</body>
+</html>

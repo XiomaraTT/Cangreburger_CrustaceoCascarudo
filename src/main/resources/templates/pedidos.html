@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos - Crustáceo Cascarudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #b5e2f5 50%, #E0F4FF 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 30px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.3);
+            border: 3px solid #5DADE2;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        .subtitle {
+            color: #1e5799;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 20px;
+            border: 2px solid #5DADE2;
+        }
+        .subtitle-icon {
+            font-size: 1.3em;
+            margin-right: 5px;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1300px;
+            margin: auto;
+            flex-wrap: wrap;
+        }
+        .form-container, .pedidos-lista-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(26, 54, 93, 0.15);
+            flex: 1;
+            min-width: 380px;
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-container::before, .pedidos-lista-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            border-bottom: 3px solid #5DADE2;
+            padding-bottom: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        h2 .icon {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            padding: 8px;
+            border-radius: 10px;
+            font-size: 0.9em;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1e5799;
+            font-size: 0.95em;
+        }
+        select, input[type="number"] {
+            padding: 14px 15px;
+            margin-bottom: 18px;
+            border: 2px solid #AED6F1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #FFFFFF;
+            color: #1a1a2e;
+            transition: all 0.3s ease;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #3498DB;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+        select:hover, input:hover {
+            border-color: #5DADE2;
+        }
+        button {
+            padding: 15px 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .btn-agregar {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            border: 2px solid #5DADE2;
+            box-shadow: 0 4px 15px rgba(30, 87, 153, 0.3);
+        }
+        .btn-agregar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.4);
+            background: linear-gradient(135deg, #2989d8 0%, #3a9fe8 100%);
+        }
+        .btn-atender {
+            background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%);
+            width: 100%;
+            border: 2px solid #1e5799;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+        .btn-atender:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.5);
+        }
+        .btn-atender:disabled {
+            background: #AEB6BF;
+            border-color: #85929E;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .cola-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #E8F4FD 0%, #D4E9F7 100%);
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            border: 2px solid #AED6F1;
+        }
+        .cola-info span:first-child {
+            font-weight: 700;
+            color: #1e5799;
+        }
+        .cola-contador {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            border: 2px solid #5DADE2;
+        }
+        .proximo-pedido {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            padding: 18px;
+            border-radius: 15px;
+            margin-bottom: 18px;
+            border: 3px solid #1e5799;
+            box-shadow: 0 5px 20px rgba(52, 152, 219, 0.3);
+        }
+        .proximo-pedido-titulo {
+            font-size: 0.9em;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .proximo-pedido-info {
+            font-weight: 700;
+            font-size: 1.15em;
+        }
+        .pedidos-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 18px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(26, 54, 93, 0.1);
+        }
+        .pedidos-table th {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            font-weight: 700;
+            padding: 14px 12px;
+            text-align: left;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pedidos-table td {
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 1px solid #D4E9F7;
+            background: white;
+            color: #1a1a2e;
+        }
+        .pedidos-table tbody tr:hover td {
+            background: #E8F4FD;
+        }
+        .pedidos-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .posicion {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 700;
+            display: inline-block;
+            min-width: 30px;
+            text-align: center;
+        }
+        .posicion-primero {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            border: 2px solid #5DADE2;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(93, 173, 226, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(93, 173, 226, 0); }
+        }
+        .estado-pendiente {
+            color: #E74C3C;
+            font-weight: 700;
+            background: #FDEDEC;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        .estado-atendido {
+            color: #27AE60;
+            font-weight: 700;
+            background: #E9F7EF;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        .estado-preparando {
+            color: #F39C12;
+            font-weight: 700;
+            background: #FEF5E7;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+        .btn-historial {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            border: 2px solid #5DADE2;
+        }
+        .btn-historial:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 87, 153, 0.3);
+        }
+        .btn-menu {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            border: 2px solid #1e5799;
+        }
+        .btn-menu:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+        }
+        .btn-home {
+            background: white;
+            color: #1e5799;
+            border: 2px solid #1e5799;
+        }
+        .btn-home:hover {
+            background: #E8F4FD;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 87, 153, 0.2);
+        }
+        .empty-message {
+            text-align: center;
+            color: #5D6D7E;
+            padding: 30px;
+            font-style: italic;
+        }
+        .wave-decoration {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e5799' fill-opacity='0.1' d='M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,218.7C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <div class="logo-badge">
+        <h1>Pedidos del Crustáceo</h1>
+    </div>
+    <p class="subtitle">Cola de Pedidos - Primero en llegar, primero en ser atendido</p>
+</div>
+
+<div class="wave-decoration"></div>
+
+<div class="main-container">
+
+    <div class="form-container">
+        <h2><span class="icon"></span> Nuevo Pedido</h2>
+        <form action="/pedidos/agregar" method="post">
+            <label for="cliente-select">Cliente:</label>
+            <select name="clienteId" id="cliente-select" required>
+                <option value="">-- Seleccione un cliente --</option>
+                <option th:each="cliente : ${clientes}"
+                        th:value="${cliente.id}"
+                        th:text="${cliente.nombre} + ' ' + ${cliente.apellido}"></option>
+            </select>
+
+            <label for="plato-select">Plato:</label>
+            <select name="platoId" id="plato-select" required>
+                <option value="">-- Seleccione un plato --</option>
+                <option th:each="plato : ${platos}"
+                        th:value="${plato.id}"
+                        th:text="${plato.nombre}"></option>
+            </select>
+
+            <label for="mesa-select">Mesa:</label>
+            <select name="mesaNumero" id="mesa-select" required>
+                <option value="">-- Seleccione una mesa --</option>
+                <option th:each="mesa : ${mesas}"
+                        th:value="${mesa.numero}"
+                        th:text="'Mesa ' + ${mesa.numero} + ' (Capacidad: ' + ${mesa.capacidad} + ')' "></option>
+            </select>
+
+            <label for="cantidad-input">Cantidad:</label>
+            <input type="number" id="cantidad-input" name="cantidad" placeholder="Cantidad" required min="1" value="1">
+
+            <button type="submit" class="btn-agregar">Agregar a la Cola</button>
+        </form>
+    </div>
+
+    <div class="pedidos-lista-container">
+        <h2><span class="icon"></span> Pedidos en Espera</h2>
+
+        <div class="cola-info">
+            <span>Pedidos pendientes:</span>
+            <span class="cola-contador" th:text="${tamañoCola} + ' en cola'">0 en cola</span>
+        </div>
+
+        <div th:if="${pedidoFrente != null}" class="proximo-pedido">
+            <div class="proximo-pedido-titulo">Próximo a atender:</div>
+            <div class="proximo-pedido-info">
+                <span th:text="${pedidoFrente.cliente != null ? pedidoFrente.cliente.nombre + ' ' + pedidoFrente.cliente.apellido : 'N/A'}"></span>
+                -
+                <span th:text="${pedidoFrente.plato != null ? pedidoFrente.plato.nombre : 'N/A'}"></span>
+            </div>
+        </div>
+
+        <form action="/pedidos/atender" method="post">
+            <button type="submit" class="btn-atender" th:disabled="${tamañoCola == 0}">
+                ATENDER SIGUIENTE PEDIDO
+            </button>
+        </form>
+
+        <table class="pedidos-table">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Plato</th>
+                <th>Mesa</th>
+                <th>Cant.</th>
+                <th>Estado</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(pedidos)}">
+                <td colspan="6" class="empty-message">No hay pedidos en cola.</td>
+            </tr>
+            <tr th:each="pedido, iterStat : ${pedidos}">
+                <td>
+                    <span class="posicion" th:classappend="${iterStat.first} ? 'posicion-primero' : ''"
+                          th:text="${iterStat.index + 1}"></span>
+                </td>
+                <td th:text="${pedido.cliente != null ? pedido.cliente.nombre + ' ' + pedido.cliente.apellido : 'N/A'}"></td>
+                <td th:text="${pedido.plato != null ? pedido.plato.nombre : 'N/A'}"></td>
+                <td th:text="${pedido.mesa != null ? pedido.mesa.numero : 'N/A'}"></td>
+                <td th:text="${pedido.cantidad}"></td>
+                <td>
+                    <span th:text="${pedido.estado}"
+                          th:class="${pedido.estado == 'EN ESPERA'} ? 'estado-pendiente' : (${pedido.estado == 'PREPARANDO'} ? 'estado-preparando' : 'estado-atendido')"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <div class="nav-buttons">
+            <a href="/" class="btn-nav btn-home">Inicio</a>
+            <a href="/historial" class="btn-nav btn-historial">Ver Historial</a>
+            <a href="/menu" class="btn-nav btn-menu">Ver Menú</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

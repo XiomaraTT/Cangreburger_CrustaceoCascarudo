@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Historial - Crustáceo Cascarudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #b5e2f5 50%, #E0F4FF 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 30px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.3);
+            border: 3px solid #5DADE2;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        .subtitle {
+            color: #1e5799;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 20px;
+            border: 2px solid #5DADE2;
+        }
+        .pila-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(30, 87, 153, 0.15);
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .pila-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        .pila-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #5DADE2;
+            margin-top: 5px;
+        }
+        .pila-header h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            font-size: 1.5em;
+        }
+        .pila-info {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 700;
+            border: 2px solid #5DADE2;
+        }
+        .pila-empty {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+            font-size: 1.2em;
+        }
+        .pila-item {
+            background: linear-gradient(135deg, #fff 0%, #F0F8FF 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #AED6F1;
+            border-left: 6px solid #5DADE2;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .pila-item:hover {
+            transform: translateX(8px);
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.15);
+        }
+        .pila-item:first-child {
+            border-left-color: #1e5799;
+            background: linear-gradient(135deg, #E8F4FD 0%, #fff 100%);
+        }
+        .pila-item:first-child::before {
+            content: "TOPE";
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 700;
+            border: 2px solid #5DADE2;
+        }
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        .pedido-id {
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+        .pedido-estado {
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+        .estado-en-espera {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .estado-preparando {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+        .estado-atendido {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .pedido-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .info-value {
+            color: #1e5799;
+            font-weight: 700;
+        }
+        .pedido-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 2px dashed #AED6F1;
+        }
+        .pedido-fecha {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .pedido-fecha span {
+            color: #1e5799;
+            font-weight: 600;
+        }
+        .btn-eliminar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-eliminar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.4);
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+        .btn-volver {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            border: 2px solid #5DADE2;
+        }
+        .btn-volver:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 87, 153, 0.3);
+        }
+        .btn-home {
+            background: white;
+            color: #1e5799;
+            border: 2px solid #1e5799;
+        }
+        .btn-home:hover {
+            background: #E8F4FD;
+            transform: translateY(-3px);
+        }
+        .icon {
+            font-size: 1.1em;
+        }
+        .wave-decoration {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e5799' fill-opacity='0.1' d='M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,218.7C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-container">
+        <div class="logo-badge">
+            <h1>Historial de Pedidos</h1>
+        </div>
+        <p class="subtitle">Estructura de Pila (LIFO) - El último pedido está en el tope</p>
+    </div>
+
+    <div class="wave-decoration"></div>
+
+    <div class="pila-container">
+        <div class="pila-header">
+            <h2>Pila de Pedidos</h2>
+            <div class="pila-info">
+                Total: <strong th:text="${#lists.size(pilaPedidos)}">0</strong> pedidos
+            </div>
+        </div>
+
+        <div th:if="${#lists.isEmpty(pilaPedidos)}" class="pila-empty">
+            <p>No hay pedidos en el historial</p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #888;">La pila está vacía</p>
+        </div>
+
+        <div th:each="pedido, iterStat : ${pilaPedidos}" class="pila-item">
+            <div class="pedido-header">
+                <span class="pedido-id">Pedido #<span th:text="${pedido.id}"></span></span>
+                <span class="pedido-estado"
+                      th:classappend="${pedido.estado == 'EN ESPERA'} ? 'estado-en-espera' : (${pedido.estado == 'PREPARANDO'} ? 'estado-preparando' : 'estado-atendido')"
+                      th:text="${pedido.estado}">ESTADO</span>
+            </div>
+
+            <div class="pedido-info">
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="info-label">Cliente:</span>
+                    <span class="info-value" th:text="${pedido.cliente != null ? pedido.cliente.nombre + ' ' + pedido.cliente.apellido : 'N/A'}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="info-label">Plato:</span>
+                    <span class="info-value" th:text="${pedido.plato != null ? pedido.plato.nombre : 'N/A'}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="info-label">Cantidad:</span>
+                    <span class="info-value" th:text="${pedido.cantidad}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="icon"></span>
+                    <span class="info-label">Mesa:</span>
+                    <span class="info-value" th:text="${pedido.mesa != null ? pedido.mesa.numero : 'N/A'}"></span>
+                </div>
+            </div>
+
+            <div class="pedido-footer">
+                <div class="pedido-fecha">
+                    <span class="icon"></span> Registrado: <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm:ss')}"></span>
+                </div>
+                <form th:action="@{/historial/eliminar/{id}(id=${pedido.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn-eliminar" onclick="return confirm('¿Eliminar este pedido del historial?');">
+                        Eliminar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="/" class="btn-nav btn-home">Inicio</a>
+        <a href="/pedidos" class="btn-nav btn-volver">Ir a Pedidos</a>
+    </div>
+</div>
+
+</body>
+</html>
+

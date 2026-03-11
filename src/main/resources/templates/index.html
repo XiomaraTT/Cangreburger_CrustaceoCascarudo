@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Crustáceo Cascarudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #b5e2f5 50%, #E0F4FF 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .logo-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 50%, #1e5799 100%);
+            padding: 25px 50px;
+            border-radius: 60px;
+            box-shadow: 0 15px 40px rgba(30, 87, 153, 0.4);
+            border: 4px solid #5DADE2;
+            position: relative;
+        }
+        .logo-badge::before {
+            content: '';
+            display: none;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.8em;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        .welcome-text {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            font-size: 1.3em;
+            margin-top: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 12px 30px;
+            border-radius: 25px;
+            border: 2px solid #5DADE2;
+        }
+        .main-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(30, 87, 153, 0.2);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        .menu-title {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #5DADE2;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 18px 20px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            border: 2px solid #5DADE2;
+            box-shadow: 0 4px 15px rgba(30, 87, 153, 0.3);
+        }
+        .nav-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(30, 87, 153, 0.4);
+            background: linear-gradient(135deg, #2989d8 0%, #3a9fe8 100%);
+        }
+        .nav-item.highlight {
+            grid-column: span 2;
+            background: linear-gradient(135deg, #5DADE2 0%, #3498DB 100%);
+            border-color: #1e5799;
+        }
+        .nav-item.highlight:hover {
+            background: linear-gradient(135deg, #6DBDE2 0%, #4AA8EB 100%);
+        }
+        .nav-icon {
+            font-size: 1.5em;
+        }
+        .wave-decoration {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e5799' fill-opacity='0.15' d='M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,218.7C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .footer-text {
+            text-align: center;
+            margin-top: 30px;
+            color: #1e5799;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="logo-container">
+    <div class="logo-badge">
+        <h1>Crustáceo Cascarudo</h1>
+    </div>
+    <p class="welcome-text" th:text="${mensajeBienvenida}">¡Bienvenido al mejor restaurante de Fondo de Bikini!</p>
+</div>
+
+<div class="main-container">
+    <h2 class="menu-title">Menú del Sistema</h2>
+    <div class="nav-grid">
+        <a href="/clientes" class="nav-item">
+            <span class="nav-icon"></span> Clientes
+        </a>
+        <a href="/menu" class="nav-item">
+            <span class="nav-icon"></span> Menú
+        </a>
+        <a href="/mesas" class="nav-item">
+            <span class="nav-icon"></span> Mesas
+        </a>
+        <a href="/historial" class="nav-item">
+            <span class="nav-icon"></span> Historial
+        </a>
+        <a href="/pedidos" class="nav-item highlight">
+            <span class="nav-icon"></span> Pedidos
+        </a>
+    </div>
+</div>
+
+<p class="footer-text">Sistema de Gestión - Crustáceo Cascarudo © 2026</p>
+
+<div class="wave-decoration"></div>
+
+</body>
+</html>

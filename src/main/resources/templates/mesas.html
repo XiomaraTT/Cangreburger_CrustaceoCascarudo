@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mesas - Crustáceo Cascarudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, #87CEEB 0%, #b5e2f5 50%, #E0F4FF 100%);
+            color: #1a1a2e;
+            min-height: 100vh;
+            padding: 30px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='2' fill='%23ffffff' opacity='0.3'/%3E%3C/svg%3E") repeat;
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .header-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            padding: 15px 40px;
+            border-radius: 50px;
+            margin-bottom: 15px;
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.3);
+            border: 3px solid #5DADE2;
+        }
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #FFFFFF;
+            font-size: 2.2em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 0;
+        }
+        .subtitle {
+            color: #1e5799;
+            font-size: 1.1em;
+            font-weight: 600;
+            background: rgba(255,255,255,0.7);
+            display: inline-block;
+            padding: 8px 25px;
+            border-radius: 20px;
+            border: 2px solid #5DADE2;
+        }
+        .main-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            max-width: 1300px;
+            margin: auto;
+            flex-wrap: wrap;
+        }
+        .form-container, .mesas-container {
+            background: linear-gradient(180deg, #FFFFFF 0%, #F0F8FF 100%);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(30, 87, 153, 0.15);
+            flex: 1;
+            min-width: 380px;
+            border: 3px solid #5DADE2;
+            position: relative;
+            overflow: hidden;
+        }
+        .form-container::before, .mesas-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2, #1e5799);
+        }
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: #1e5799;
+            border-bottom: 3px solid #5DADE2;
+            padding-bottom: 12px;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #1e5799;
+            font-size: 0.95em;
+        }
+        input[type="number"] {
+            padding: 14px 15px;
+            margin-bottom: 18px;
+            border: 2px solid #AED6F1;
+            border-radius: 12px;
+            font-size: 15px;
+            background: #FFFFFF;
+            color: #1a1a2e;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3498DB;
+            box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+        button {
+            padding: 15px 20px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+        .btn-agregar {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            border: 2px solid #5DADE2;
+        }
+        .btn-agregar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(30, 87, 153, 0.4);
+        }
+        .arreglo-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #E8F4FD 0%, #D4E9F7 100%);
+            padding: 15px 18px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 2px solid #AED6F1;
+        }
+        .arreglo-contador {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            border: 2px solid #5DADE2;
+        }
+        .estado-libres {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .estado-ocupadas {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+        .mesas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 18px;
+            margin-top: 15px;
+        }
+        .mesa-card-wrapper {
+            position: relative;
+        }
+        .mesa-card {
+            background: linear-gradient(135deg, #fff 0%, #F0F8FF 100%);
+            border: 3px solid #5DADE2;
+            border-radius: 18px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .mesa-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(30, 87, 153, 0.2);
+        }
+        .mesa-card.ocupada {
+            border-color: #e74c3c;
+            background: linear-gradient(135deg, #fdedec 0%, #fff 100%);
+        }
+        .mesa-card.libre {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #e8f8f0 0%, #fff 100%);
+        }
+        .mesa-numero {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.2em;
+            color: #1e5799;
+        }
+        .mesa-capacidad {
+            color: #666;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        .mesa-estado {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 12px 0;
+        }
+        .mesa-estado.libre {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .mesa-estado.ocupada {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .mesa-acciones {
+            margin-top: 12px;
+        }
+        .btn-ocupar, .btn-liberar {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+        .btn-ocupar {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .btn-liberar {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .btn-ocupar:hover, .btn-liberar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .indice-arreglo {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 700;
+            position: absolute;
+            top: -10px;
+            left: 15px;
+        }
+        .capacidad-barra {
+            margin-top: 20px;
+            padding: 18px;
+            background: linear-gradient(135deg, #E8F4FD 0%, #D4E9F7 100%);
+            border-radius: 15px;
+            border: 2px solid #AED6F1;
+        }
+        .capacidad-texto {
+            margin: 0 0 12px 0;
+            color: #1e5799;
+            font-weight: 700;
+        }
+        .capacidad-visual {
+            background: #d5e8f5;
+            border-radius: 10px;
+            height: 15px;
+            overflow: hidden;
+        }
+        .capacidad-progreso {
+            height: 100%;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1e5799, #5DADE2);
+            transition: width 0.5s ease;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+        .btn-volver {
+            background: linear-gradient(135deg, #1e5799 0%, #2989d8 100%);
+            color: white;
+            border: 2px solid #5DADE2;
+        }
+        .btn-volver:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(30, 87, 153, 0.3);
+        }
+        .btn-home {
+            background: white;
+            color: #1e5799;
+            border: 2px solid #1e5799;
+        }
+        .btn-home:hover {
+            background: #E8F4FD;
+            transform: translateY(-3px);
+        }
+        .empty-message {
+            text-align: center;
+            color: #5D6D7E;
+            padding: 30px;
+            font-style: italic;
+        }
+        .wave-decoration {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%231e5799' fill-opacity='0.1' d='M0,160L48,170.7C96,181,192,203,288,197.3C384,192,480,160,576,165.3C672,171,768,213,864,218.7C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
+            background-size: cover;
+            pointer-events: none;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header-container">
+    <div class="logo-badge">
+        <h1>Mesas del Crustáceo</h1>
+    </div>
+    <p class="subtitle">Gestión de mesas del restaurante</p>
+</div>
+
+<div class="wave-decoration"></div>
+
+<div class="main-container">
+
+    <div class="form-container">
+        <h2>Agregar Mesa</h2>
+        <form action="/mesas/agregar" method="post">
+            <label for="numero">Número de Mesa:</label>
+            <input type="number" id="numero" name="numero" placeholder="Ej: 4" required min="1">
+
+            <label for="capacidad">Capacidad (personas):</label>
+            <input type="number" id="capacidad" name="capacidad" placeholder="Ej: 4" required min="1">
+
+            <button type="submit" class="btn-agregar">Agregar Mesa</button>
+        </form>
+
+        <div class="capacidad-barra">
+            <p class="capacidad-texto">
+                Capacidad del arreglo:
+                <span th:text="${totalMesas}">0</span> / <span th:text="${capacidadMaxima}">20</span> mesas
+            </p>
+            <div class="capacidad-visual">
+                <div class="capacidad-progreso"
+                     th:style="'width: ' + (${totalMesas} * 100 / ${capacidadMaxima}) + '%'"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mesas-container">
+        <h2>Mesas Registradas</h2>
+
+        <div class="arreglo-info">
+            <span class="arreglo-contador" th:text="${totalMesas} + ' mesas'">0 mesas</span>
+            <span class="estado-libres" th:text="${mesasLibres} + ' libres'">0 libres</span>
+            <span class="estado-ocupadas" th:text="${mesasOcupadas} + ' ocupadas'">0 ocupadas</span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(mesas)}" class="empty-message">
+            No hay mesas registradas en el arreglo.
+        </div>
+
+        <div class="mesas-grid">
+            <div th:each="mesa, iterStat : ${mesas}" class="mesa-card-wrapper">
+                <span class="indice-arreglo" th:text="'[' + ${iterStat.index} + ']'"></span>
+                <div class="mesa-card" th:classappend="${mesa.ocupada} ? 'ocupada' : 'libre'">
+                    <div class="mesa-numero" th:text="'Mesa ' + ${mesa.numero}"></div>
+                    <div class="mesa-capacidad" th:text="${mesa.capacidad} + ' personas'"></div>
+                    <div class="mesa-estado" th:classappend="${mesa.ocupada} ? 'ocupada' : 'libre'"
+                         th:text="${mesa.ocupada} ? 'Ocupada' : 'Libre'"></div>
+                    <div class="mesa-acciones">
+                        <form th:if="${!mesa.ocupada}" th:action="@{/mesas/ocupar}" method="post" style="display: inline;">
+                            <input type="hidden" name="numero" th:value="${mesa.numero}">
+                            <button type="submit" class="btn-ocupar">Ocupar</button>
+                        </form>
+                        <form th:if="${mesa.ocupada}" th:action="@{/mesas/liberar}" method="post" style="display: inline;">
+                            <input type="hidden" name="numero" th:value="${mesa.numero}">
+                            <button type="submit" class="btn-liberar">Liberar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="/" class="btn-nav btn-home">Inicio</a>
+            <a href="/pedidos" class="btn-nav btn-volver">Ir a Pedidos</a>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+
+
+
+
